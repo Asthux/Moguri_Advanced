@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moguri.security.account.mapper.UserDetailsMapper">
+
+    <resultMap id="authMap" type="AuthVO">
+        <result property="memberId" column="member_id"/> <!-- member_id로 수정 -->
+        <result property="auth" column="auth"/>
+    </resultMap>
+
+    <resultMap id="memberMap" type="MemberVO">
+        <id property="memberId" column="MEMBER_ID"/> <!-- PK로 MEMBER_ID 사용 -->
+        <result property="email" column="EMAIL"/>
+        <result property="nickName" column="NICKNAME"/> <!-- 닉네임 -->
+        <result property="password" column="PASSWORD"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="updatedAt" column="UPDATED_AT"/>
+        <result property="deletedAt" column="DELETED_AT"/>
+        <result property="cottonCandy" column="COTTON_CANDY"/>
+        <collection property="authList" resultMap="authMap"/>
+    </resultMap>
+
+    <select id="get" resultMap="memberMap">
+        select m.MEMBER_ID, m.EMAIL, m.NICKNAME, m.PASSWORD, m.CREATED_AT, m.UPDATED_AT, m.DELETED_AT, a.auth, m.COTTON_CANDY
+        from Member m
+        left outer join member_auth a
+        on m.MEMBER_ID = a.member_id <!-- MEMBER_ID로 수정 -->
+        where m.EMAIL = #{email} <!-- 이메일로 조회 -->
+    </select>
+</mapper>
